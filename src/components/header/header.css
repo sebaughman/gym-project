@@ -1,0 +1,63 @@
+.header-container{
+    background-image: linear-gradient(97deg, #3c3e47, #333640);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.header-body{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #d9d9d7;
+    max-width: 650px;
+}
+.header-logo{
+    background-image: url('../../assets/climber-logo-grey.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 40px;
+    width: 50px;
+    margin-left: 10px;
+}
+.userImage-select-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.roleSelect{
+    margin-right: 5px;
+    background: none;
+    border: none;
+    font-size: .9em;
+    margin-left: 0px;
+    color: #d9d9d7;
+    width: 60px;
+}
+.appTitle{
+    margin-right:0px;
+    font-size: .6em;
+    color: #e9e9e6;
+    letter-spacing: .05em;
+    margin-bottom: 3px;
+}
+.appTitle-select-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    margin-top:10px;
+}
+
+.appTitle-select{
+    margin-top: 0px;
+    font-size: 1.2em;
+    color: #e9e9e6;
+    letter-spacing: .05em;
+   
+}

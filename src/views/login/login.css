@@ -1,0 +1,38 @@
+
+.login-body{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('../../assets/login-background.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.login-logo{
+    background-image: url('../../assets/climber-logo-white.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 250px;
+    width: 250px;
+}
+.login-title{
+    font-size: 3em;
+    color:white;
+    margin-bottom:70px;
+}
+
+.google-login-button{
+    background-image: url('../../assets/btn_google_blue.png') ;
+    opacity: .95;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 55px;
+    width: 300px;
+    margin-top: 120px;
+}
+

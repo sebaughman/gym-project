@@ -1,0 +1,32 @@
+
+.route-box{
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.color-box{
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    margin-right: 10px;
+}
+.color-grade-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.stars-container{
+    display:flex;
+    flex-direction: row;
+}
+.star-icon{
+    height: 20px;
+    width: 20px;
+    background-image: url('../../assets/star-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

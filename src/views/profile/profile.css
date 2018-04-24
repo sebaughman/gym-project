@@ -1,0 +1,22 @@
+.profileBody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+.profile-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.setterMessage{
+    margin-top: 200px;
+    text-align: center;
+    font-size: 1.3em;
+    color: #3c3e47;
+    letter-spacing: .03em
+    
+}

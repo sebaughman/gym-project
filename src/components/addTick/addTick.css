@@ -1,0 +1,16 @@
+.addTick-body{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+}
+.addTick-button{
+    width: 120px;
+    align-self: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+.rating-question{
+    margin-bottom: 0px;
+}

@@ -1,0 +1,98 @@
+
+*{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-sizing: border-box;
+}
+body{
+    background-image: url('./assets/background-pattern.png');
+    background-size: contain;
+    background-position: center;
+    height: 100vh;
+}
+a{
+    text-decoration: none;
+    color: #d9d9d7
+}
+
+.body{
+    height: 100vh;
+    overflow: hidden;
+}
+.popup{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+.popup-background{
+    background-color: rgba(0, 0, 0,.6);
+    height:100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center ;
+    pointer-events: all;
+}
+.popup-content{
+    height: 350px;
+    width: 280px;
+    opacity: 1;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.exit-popup-button{
+    margin-right: -15px;
+    font-size: 1.1em;
+    background: none;
+    border: none;
+   }
+.white-container{
+    background-color: #FFFFFF;
+    padding: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 650px;
+}
+
+.title-container{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 96%;
+    margin-bottom: 3px;
+    max-width: 650px;
+}
+.section-title{
+    font-size:1.3em;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: #333640;
+}
+.green-button{
+    background-image: linear-gradient(0deg,#27ae60, #34d879);
+    border: none;
+    border-radius:3px;
+    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+select{
+    outline:none;
+    background: none;
+    border: none;
+    -webkit-appearance: none;
+     cursor: pointer; 
+}
+button{
+    outline:none;
+    cursor: pointer; 
+}
