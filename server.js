@@ -6,8 +6,10 @@ const session = require('express-session')
 const passport = require('passport')
 const authConfig = require('./server/controllers/authConfig')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
 const gymController = require('./server/controllers/gymController');
+const multer = require('multer');
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
 
 require('dotenv').config(); 
 
@@ -34,6 +36,27 @@ massive(process.env.CONNECTION_STRING)
     .catch(err=>{
         console.error(`can't connect to db: ${err}`)
 });
+
+aws.config.update({
+    secretAccessKey: process.env.AWS_SECRET,
+    accessKeyId: process.env.AWS_KEY,
+    region: 'us-west-1'
+})
+
+const s3 = new aws.S3();
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'gym-project',
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            console.log(file);
+            cb(null, file.originalname); //use Date.now() for unique file keys
+        }
+    })
+});
+
+
 
     //---------Authentication---------//
 passport.use('google', new GoogleStrategy({
@@ -353,6 +376,42 @@ app.put(`/api/route`, (req, res)=>{
         })
 })
 
+app.post('/api/route-image/:route_id', upload.array('abc',1), (req, res, next)=> {
+    req.db.routes.update({id: req.params.route_id, image: req.files[0].location})
+        .then(response=>{
+            res.send({message: 'uploaded!', route: response})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+});
+
+function deleteFile(fileName){
+    const bucketInstance = new aws.S3();
+    var params = {
+        Bucket: 'gym-project',
+        Key: fileName
+    };
+    bucketInstance.deleteObject(params, function (err, data) {
+        if (data) {
+            console.log("File deleted successfully");
+        }
+        else {
+            console.log("Check if you have sufficient permissions : "+err);
+        }
+    });
+};
+
+app.put('/api/route-image', (req, res)=>{
+    deleteFile(req.body.fileName)
+    req.db.routes.update({id: req.body.route_id, image: null})
+        .then(route=>{
+            res.send({message: 'deleted!', route: route})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+})
 
 //-------------comments endpoints ------------//
 

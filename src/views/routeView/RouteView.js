@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {setImage} from '../../redux/action-creators';
 import Header from '../../components/header/Header';
 import axios from 'axios';
 import RouteViewButtons from '../../components/routeViewButtons/RouteViewButtons'
@@ -20,6 +21,7 @@ class RouteView extends Component {
   componentDidMount(){
     axios.get(`/api/route/${this.props.match.params.route_id}`)
       .then(route=>{
+        this.props.setImage(route.data.image)
         route.data.set_date = new Date(route.data.set_date)
         route.data.removal_date = new Date(route.data.removal_date)
         axios.get(`/api/comments/${this.props.match.params.route_id}`)
@@ -157,7 +159,7 @@ class RouteView extends Component {
                     <p> <span style={{fontWeight:'bold'}}>Set Date: </span>{new Date(this.state.set_date).toDateString()}</p>
                     <p> <span style={{fontWeight:'bold'}}>Removal Date:</span> {new Date(this.state.removal_date).toDateString()}</p>
                   </div>
-                  <div className='routeImage' style={{backgroundImage:this.state.image}}/>
+                  <div className='routeImage' style={{backgroundImage:`url(${this.props.routeImage})`}}/>
                   </div>
                   <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()}/>
               </div>
@@ -193,8 +195,8 @@ class RouteView extends Component {
     }
   }
   
-  function mapStateToProps ({ user}) {
-    return { user};
+  function mapStateToProps ({ user, routeImage}) {
+    return { user, routeImage};
     }
   
-  export default connect(mapStateToProps , )(RouteView); 
+  export default connect(mapStateToProps ,{setImage} )(RouteView); 

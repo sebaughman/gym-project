@@ -6,7 +6,11 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
-import './editRoute.css'
+import './editRoute.css';
+import FineUploaderS3 from 'fine-uploader-wrappers/s3';
+import FileInput from '../fileInput/FileInput';
+// import Gallery from 'react-fine-uploader'
+// import 'react-fine-uploader/gallery/gallery.css'
 
 class EditRoute extends Component {
   constructor(){
@@ -69,7 +73,7 @@ class EditRoute extends Component {
       color: this.state.color,
       setter_id: this.state.setter_id, 
       wall: this.state.wall,
-      image: this.state.image,
+      image: this.props.routeImage,
       set_date: new Date(this.state.set_date),
       removal_date: new Date(this.state.removal_date),
       disabled: this.state.disabled
@@ -93,7 +97,7 @@ class EditRoute extends Component {
       })
    }
   }
-  
+
     render() {
       let boulderingGrades = [
         <MenuItem key={1} value='v0' primaryText="V0" />,
@@ -145,7 +149,17 @@ class EditRoute extends Component {
         <MenuItem key={43} value='brown' primaryText="" style={{backgroundColor:'brown'}}/>,
         <MenuItem key={44} value='yellow' primaryText="" style={{backgroundColor:'yellow'}}/>,
       ]
-      
+      const uploader = new FineUploaderS3({
+        options: {
+            request: {
+                endpoint: "http://fineuploadertest.s3.amazonaws.com",
+                accessKey: "AKIAIXVR6TANOGNBGANQ"
+            },
+            signature: {
+                endpoint: "/vendor/fineuploader/php-s3-server/endpoint.php"
+            },
+        } 
+    })
       return (
         <div className='popup-background' style={{visibility: this.props.visibility}}>
             <div className='popup-content'> 
@@ -232,7 +246,13 @@ class EditRoute extends Component {
                           />
                       </div>
                       <div className='secondColumn'>
-                          
+                        {/* <Gallery 
+                            uploader={ uploader }
+                            multiple={false}
+                            fileInput-multiple={false}
+                            dropzone-disabled={ true }
+                            /> */}
+                        <FileInput route_id={this.state.id} />
                       </div>
                   </div>
               </div>
@@ -245,8 +265,8 @@ class EditRoute extends Component {
     }
   }
   
-  function mapStateToProps ({ gyms, user }) {
-    return { gyms, user };
+  function mapStateToProps ({ gyms, user, routeImage }) {
+    return { gyms, user, routeImage };
     }
   
   export default connect(mapStateToProps )(EditRoute); 

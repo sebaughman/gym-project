@@ -36,12 +36,7 @@
     margin-bottom: 5px;
     margin-top: 2px;
 }
-.routeImage{
-    border: 1px solid #333640;
-    height: 140px;
-    width: 120px;
-    margin: 5px;
-}
+
 .comment-container{
     max-height: 210px;
     overflow: scroll;
