@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {addTick} from '../../redux/action-creators'
+import {addTick, removeTodo} from '../../redux/action-creators'
 import grades from '../../helperFiles/grades'
 import MuiThemeProvider   from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
@@ -26,9 +26,11 @@ class AddTick extends Component {
   }
 
 //When Done is pressed we send the info through redux to update state and our db (check /services)
+// ticking a route means removing the todo
 //then hide popup
   addTick(){
     this.props.addTick({route_id: this.props.route_id, stars:this.state.stars, rating: this.state.difficulty, gym_id: this.props.gyms.selectedGym})
+    this.props.removeTodo(this.props.route_id)
     this.props.AddTickVisibility('hidden')
   }
 
@@ -91,4 +93,4 @@ class AddTick extends Component {
     return { gyms };
     }
   
-  export default connect(mapStateToProps , { addTick })(AddTick); 
+  export default connect(mapStateToProps , { addTick, removeTodo })(AddTick); 

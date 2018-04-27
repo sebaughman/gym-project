@@ -23,45 +23,52 @@ class Dashboard extends Component {
       type: 'bouldering'
     }
   }
-componentDidMount(){
+//if the user has no gyms, they need to add one so we pop up the modal on component load
+ componentDidMount(){
   if(this.props.gyms.usersGyms.length === 0){
     this.setState({
       addGymPopup: 'visible'
     })
   }
-}
+ }
 
-  checkUsersGyms(){
-    if(this.props.gyms.usersGyms.length === 0){
-      this.setState({
-        addGymPopup: 'visible'
-      })
-    }
-    else{
-      this.setState({
-        loading: false
-      })
-    }
-  }
+ //I am not sure if this is used anywhere......
+//  checkUsersGyms(){
+//     if(this.props.gyms.usersGyms.length === 0){
+//       this.setState({
+//         addGymPopup: 'visible'
+//       })
+//     }
+//     else{
+//       this.setState({
+//         loading: false
+//       })
+//     }
+//  }
 
-  addGymVisibility(value){
+ //this is passed to child components that need control over closing or opening the modal
+ addGymVisibility(value){
     this.setState({
       addGymPopup: value
     })
-  }
-  addRouteVisibility(value){
+ }
+
+ //this is passed to child components that need control over closing or opening the modal
+ addRouteVisibility(value){
     this.setState({
       addRoutePopup: value
     })
-  }
+ }
 
-  changeRoutes(event){
+ //used to change the filters on which routes to show
+ changeRoutes(event){
     this.setState({
       [event.target.name]: event.target.value
     })
-  }
+ }
 
-  updateRoute(route){
+ //this is called from the EditRoute modal to add a route 
+ updateRoute(route){
     this.setState({
       loading: true
     })
@@ -74,7 +81,7 @@ componentDidMount(){
       })
       this.addRouteVisibility('hidden')
     })
-  }
+ }
 
     render() {
       
@@ -103,7 +110,7 @@ componentDidMount(){
                       <option value='disabledRoutes'>Disabled Routes</option>
                     </select>
                   }
-                  <select value={this.state.type} name='type' className='type-selector' onChange={(event)=>this.changeRoutes(event)}>
+                  <select value={this.state.type} name='type' onChange={(event)=>this.changeRoutes(event)}>
                     <option value='bouldering'>Bouldering</option>
                     <option value='sport'>Sport</option>
                   </select>
