@@ -8,17 +8,6 @@ import './profile.css'
 
 
 class Profile extends Component {
-    // constructor(){
-    //     super()
-    //     this.state = {
-    //         addGymPopup: 'hidden'
-    //     }
-    // }
-    // AddGymVisibility(value){
-    //     this.setState({
-    //       addGymPopup: value
-    //     })
-    //   }
 
     render() {
       let ticks = this.props.ticks.filter(tick=>tick.gym_id === this.props.gyms.selectedGym)
@@ -75,7 +64,6 @@ class Profile extends Component {
 
                   <div className='title-container'>
                         <p className='section-title'>Gyms</p>
-                        <button className='addGym-Button green-button' onClick={()=>this.AddGymVisibility('visible')}> + </button>
                   </div>
                 
                   <div className=' white-container'>

@@ -7,9 +7,14 @@ const passport = require('passport')
 const authConfig = require('./server/controllers/authConfig')
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const gymController = require('./server/controllers/gymController');
+const commentController = require('./server/controllers/commentController');
+const todoController = require('./server/controllers/todoController');
+const routeController = require('./server/controllers/routeController');
 const multer = require('multer');
 const aws = require('aws-sdk');
 const multerS3 = require('multer-s3');
+
+const tickController = require('./server/controllers/tickController');
 
 require('dotenv').config(); 
 
@@ -37,6 +42,7 @@ massive(process.env.CONNECTION_STRING)
         console.error(`can't connect to db: ${err}`)
 });
 
+///-----amazon s3 stuff--------///
 aws.config.update({
     secretAccessKey: process.env.AWS_SECRET,
     accessKeyId: process.env.AWS_KEY,
@@ -56,7 +62,21 @@ const upload = multer({
     })
 });
 
-
+function deleteFile(fileName){
+    const bucketInstance = new aws.S3();
+    var params = {
+        Bucket: 'gym-project',
+        Key: fileName
+    };
+    bucketInstance.deleteObject(params, function (err, data) {
+        if (data) {
+            console.log("File deleted successfully");
+        }
+        else {
+            console.log("Check if you have sufficient permissions : "+err);
+        }
+    });
+};
 
     //---------Authentication---------//
 passport.use('google', new GoogleStrategy({
@@ -112,7 +132,6 @@ passport.deserializeUser((id, done) => {
 app.use(passport.initialize())
 app.use(passport.session())
 
-    
 //------custom middleware---------//
  function checkDb() {
         return (req, res, next) => {
@@ -151,9 +170,6 @@ app.use(passport.session())
        return res.status(403)
     }
  }
-
-
-
 
 //-------auth endpoints-------//
 
@@ -195,186 +211,24 @@ app.put(`/api/user-role`, (req, res)=>{
 })
 
 //------gym endpoints-----//
+app.get(`/api/gyms`, gymController.getGyms)
 
-app.get(`/api/gyms`, (req, res)=>{
-    req.db.gym_listings.find()
-        .then(gyms =>{
-            res.send(gyms)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+app.get(`/api/users-gyms`, isLoggedIn, gymController.getUsersGyms)
 
-app.get(`/api/users-gyms`, isLoggedIn, (req,res)=>{
-    req.db.GET_USERS_GYMS([req.user.id])
-        .then(gyms=>{
-            res.send(gyms)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+app.post('/api/gym', gymController.postGym)
 
+app.post(`/api/users-gym`, gymController.postUsersGym)
 
-app.post(`/api/gym`, (req, res)=>{
-    req.db.gym_listings.insert(req.body)
-        .then(gym_listing =>{
-            res.send(gym_listing)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
-
-
-app.post(`/api/users-gym`, (req,res)=>{
-    req.db.users_gyms.insert({gym_id: req.body.gym_id, user_id: req.user.id})
-        .then(gym=>{
-            req.db.GET_USERS_GYMS([req.user.id])
-                .then(gyms=>{
-                    res.send(gyms)
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
 
 //----------route endpoints-------------//
 
-app.get(`/api/routes/:gym_id`, (req, res)=>{
-    req.db.GET_ROUTES([req.params.gym_id])
-        .then(routes=>{
-            let allRoutes = [];
-            let settersRoutes = [];
-            let disabledRoutes = []
-            routes.map(route=>{
-                if(route.setter_id === req.user.id){
-                    settersRoutes.push(route)
-                }
-                if(route.disabled === true){
-                    disabledRoutes.push(route)
-                }
-                if(route.disabled === false){
-                    allRoutes.push(route)
-                }
-            })
-            res.send({allRoutes: allRoutes, settersRoutes: settersRoutes, disabledRoutes: disabledRoutes})
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+app.get(`/api/routes/:gym_id`, routeController.getRoutes)
 
+app.get(`/api/route/:route_id`, routeController.getRoute)
 
-app.get(`/api/route/:route_id`, (req, res)=>{
-    req.db.GET_ROUTE([req.params.route_id])
-        .then(route=>{
-            req.db.GET_RATINGS([route[0].id])
-                .then(ratings=>{
-                    let values=[];
-                    let letters=[]
-                    ratings.map(obj=>{
-                        let rating = obj.rating.split('')
-                        if(route[0].type === 'bouldering'){
-                            values.push(Number(rating.slice(1).join('')))
-                        }
-                        if(route[0].type === 'sport'){
-                            letters.push(rating.pop())
-                            values.push(Number(rating.slice(2).join('')))
-                        }
-                    })
-               
-                    let avgRating = 'No climber ratings';
+app.post(`/api/route`, routeController.postRoute)
 
-                    if(values.length > 0){
-                        avgRating = Math.round((values.reduce((a=0, b)=> a += b)) / values.length)
-                    
-                        if(route[0].type === 'bouldering'){
-                            avgRating = ('V' + avgRating.toString())
-                        }
-                        if(route[0].type === 'sport'){
-                            let numbers = []
-
-                            // foo = {'a': 1, 'b':2}
-                            // numbers.push foo[letter]
-                            letters.map(letter=>{
-                                switch (letter){
-                                    case 'a':
-                                    numbers.push(1)
-                                    break;
-                                    case 'b':
-                                    numbers.push(2)
-                                    break;
-                                    case 'c':
-                                    numbers.push(3)
-                                    break;
-                                    case 'd':
-                                    numbers.push(4)
-                                    break;
-                                    default:
-                                    console.log(letter)
-                                }
-                            })
-                        let number = Math.round((numbers.reduce((a, b)=> a += b)) / numbers.length)
-                        let letter;
-                        switch (number){
-                            case 1:
-                                letter ='a'
-                                break;
-                            case 2:
-                                letter ='b'
-                                break;
-                            case 3:
-                                letter ='c'
-                                break;
-                            case 4:
-                            letter ='d'
-                            break;
-                            default: 
-                            console.log(number)
-                            }
-
-                        avgRating = ('5.' + avgRating.toString() + letter)
-                        }
-                    }
-                    res.send({...route[0], avgRating})
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
-
-app.post(`/api/route`, (req, res)=>{
-    req.db.routes.insert(req.body)
-        .then(route=>{
-            disableRoutes();
-            res.send(route)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
-
-
-app.put(`/api/route`, (req, res)=>{
-    req.db.routes.update(req.body)
-        .then(route=>{
-            disableRoutes()
-            res.send(route)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+app.put(`/api/route`, routeController.updateRoute)
 
 app.post('/api/route-image/:route_id', upload.array('abc',1), (req, res, next)=> {
     req.db.routes.update({id: req.params.route_id, image: req.files[0].location})
@@ -385,22 +239,6 @@ app.post('/api/route-image/:route_id', upload.array('abc',1), (req, res, next)=>
             console.log(err)
         })
 });
-
-function deleteFile(fileName){
-    const bucketInstance = new aws.S3();
-    var params = {
-        Bucket: 'gym-project',
-        Key: fileName
-    };
-    bucketInstance.deleteObject(params, function (err, data) {
-        if (data) {
-            console.log("File deleted successfully");
-        }
-        else {
-            console.log("Check if you have sufficient permissions : "+err);
-        }
-    });
-};
 
 app.put('/api/route-image', (req, res)=>{
     deleteFile(req.body.fileName)
@@ -415,168 +253,27 @@ app.put('/api/route-image', (req, res)=>{
 
 //-------------comments endpoints ------------//
 
+app.get(`/api/comments/:route_id`, commentController.getComments)
 
- app.get(`/api/comments/:route_id`, (req, res)=>{
-     req.db.GET_COMMENTS([req.params.route_id])
-        .then(comments=>{
-            res.send(comments)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
+app.post(`/api/comment`, commentController.postComment)
 
- app.post(`/api/comment`, (req,res)=>{
-     req.db.comments.insert({user_id: req.user.id, ...req.body, created_at: new Date()})
-        .then(result=>{
-            req.db.GET_COMMENTS([req.body.route_id])
-                .then(comments=>{
-                    res.send(comments)
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
-
- app.put(`/api/comment`, (req, res)=>{
-     req.db.comments.update({...req.body, updated_at: new Date() })
-        .then(comment=>{
-            res.send(comment)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
-
- app.delete(`/api/comment/:route_id/:comment_id`, (req, res)=>{
-     req.db.comments.destroy({id: req.params.comment_id})
-        .then(result=>{
-            req.db.GET_COMMENTS([req.params.route_id])
-                .then(comments=>{
-                    res.send(comments)
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-         })
-         .catch(err=>{
-            console.log(err)
-        })
-})
+app.delete(`/api/comment/:route_id/:comment_id`, commentController.deleteComment)
 
  //------------Tick Endpoints ------------//
- app.get(`/api/ticks/`, isLoggedIn, (req, res)=>{
-     req.db.GET_TICKS([req.user.id])
-        .then(ticks=>{
-            res.send(ticks)
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
 
- app.post(`/api/tick`, (req, res)=>{
-     let date = new Date()
-     req.db.ticks.insert({date_created: date, user_id: req.user.id, route_id: req.body.route_id, gym_id: req.body.gym_id})
-        .then(tick=>{
-            req.db.star_ratings.insert({date_created: date, user_id: req.user.id, route_id: req.body.route_id, stars: req.body.stars})
-                .then(stars=>{
-                    req.db.difficulty_ratings.insert({date_created: date, user_id: req.user.id, route_id: req.body.route_id, rating: req.body.rating})
-                        .then(rating=>{
-                              req.db.GET_TICKS([req.user.id])
-                                .then(ticks=>{
-                                    res.send(ticks)
-                                })
-                                .catch(err=>{
-                                    console.log(err)
-                                })
-                        })
-                        .catch(err=>{
-                            console.log(err)
-                        })
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
+ app.get(`/api/ticks`, isLoggedIn, tickController.getTicks)
 
- app.delete(`/api/tick/:route_id`, (req, res)=>{
-    req.db.ticks.destroy({user_id: req.user.id, route_id: req.params.route_id})
-        .then(tick=>{
-            req.db.star_ratings.destroy({user_id: req.user.id, route_id: req.params.route_id})
-                .then(star=>{
-                    req.db.difficulty_ratings.destroy({user_id: req.user.id, route_id: req.params.route_id})
-                        .then(rating=>{
-                            req.db.GET_TICKS([req.user.id])
-                                .then(ticks=>{
-                                    res.send({message: 'tick removed', ticks: ticks})
-                                })
-                                .catch(err=>{
-                                    console.log(err)
-                                })
-                        })
-                        .catch(err=>{
-                            console.log(err)
-                        })
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
- })
+ app.post(`/api/tick`, tickController.postTick)
+
+ app.delete(`/api/tick/:route_id`, tickController.deleteTick)
 
  //-----------Todo Endpoints-------------//
- app.get(`/api/todos/`, isLoggedIn, (req, res)=>{
-    req.db.GET_TODOS([req.user.id])
-       .then(todos=>{
-           res.send(todos)
-       })
-       .catch(err=>{
-           console.log(err)
-       })
-})
-app.post(`/api/todo`, (req, res)=>{
-    req.db.todos.insert({date_created: new Date(), user_id: req.user.id, route_id: req.body.route_id, gym_id: req.body.gym_id})
-        .then(todo=>{
-            req.db.GET_TODOS([req.user.id])
-                .then(todos=>{
-                    res.send(todos)
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+ app.get(`/api/todos/`, isLoggedIn, todoController.getTodos)
 
-app.delete(`/api/todo/:route_id`, (req, res)=>{
-    req.db.todos.destroy({user_id: req.user.id, route_id: req.params.route_id})
-        .then(todo=>{
-            req.db.GET_TODOS([req.user.id])
-            .then(todos=>{
-                res.send(todos)
-            })
-            .catch(err=>{
-                console.log(err)
-            })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-})
+ app.post(`/api/todo`, todoController.postTodo)
+
+ app.delete(`/api/todo/:route_id`, todoController.deleteTodo)
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>{

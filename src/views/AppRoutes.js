@@ -6,7 +6,6 @@ import Dashboard from './dashboard/Dashboard';
 import RouteView from './routeView/RouteView';
 import Profile from './profile/Profile';
 import SetRole from './setRole/SetRole';
-import FileInput from '../components/fileInput/FileInput'
 
 class AppRoutes extends Component {
 constructor(){

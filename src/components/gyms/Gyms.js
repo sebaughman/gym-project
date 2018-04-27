@@ -12,7 +12,6 @@ class Gyms extends Component {
   }
 
   selectGym(event){
-   
       this.props.selectGym(event)
   }
     render() {

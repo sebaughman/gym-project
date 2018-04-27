@@ -7,7 +7,6 @@
 	z-index: -1;
 }
 .inputfile-label{
-    /* width: 20px; */
     padding: 5px;
     height: 20px;
     font-size: .95em;
@@ -23,7 +22,6 @@
     margin-top: -3px;
     height: 20px;
 }
-
 .inputfile-upload{
     margin-bottom: 5px;
     border: none;

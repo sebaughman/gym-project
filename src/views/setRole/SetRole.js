@@ -26,7 +26,7 @@ class SetRole extends Component {
     }
   }
   
-function mapStateToProps ({  }) {
+function mapStateToProps () {
     return {  };
     }
   

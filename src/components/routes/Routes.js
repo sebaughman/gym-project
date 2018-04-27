@@ -14,12 +14,16 @@ class Routes extends Component {
             disabledRoutes: [],
         }
     }
+//since I called this method twice i set it once below and called it in each lifecycle method
+//pretty much it gets all the route from the selected gym and sets them to state as All, setter's, and disabled
+// disabled show up in setter's and disabled but not myRoutes the separation happens on the db
 componentWillMount(){
     this.populateRoutes(this.props.gyms.selectedGym)
 }
 componentWillReceiveProps(props){
     this.populateRoutes(props.gyms.selectedGym)
 }
+//we filter by my, all, and disabled through state and type through props from the dashboard
     render() {
         let routes;
         if(this.props.view === 'allRoutes'){
@@ -89,7 +93,8 @@ componentWillReceiveProps(props){
         </div>
       );
     }
-    populateRoutes(selectedGym){
+
+populateRoutes(selectedGym){
         axios.get(`/api/routes/${selectedGym}`)
         .then(routes=>{
             this.setState(
@@ -101,7 +106,7 @@ componentWillReceiveProps(props){
             console.log(err)
         })
     }
-  }
+}
 
   function mapStateToProps ({ gyms }) {
     return { gyms };

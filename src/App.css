@@ -95,6 +95,14 @@ a{
     flex-direction: column;
     padding: 10px;   
 }
+
+.popup-content h3{
+    align-self: center;
+    margin-top: 3px;
+    margin-bottom: 2px;
+    font-size: 1.6em;
+    color:#333640;
+}
 .exit-popup-button{
     margin-right: -15px;
     font-size: 1.1em;
