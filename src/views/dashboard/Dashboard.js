@@ -67,7 +67,6 @@ componentDidMount(){
     })
     axios.post(`/api/route`, route)
     .then(route=>{
-      console.log(route.type)
       this.setState({
         type: route.data.type,
         view: 'settersRoutes',

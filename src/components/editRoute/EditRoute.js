@@ -11,6 +11,8 @@ import DatePicker from 'material-ui/DatePicker';
 import FileInput from '../fileInput/FileInput';
 import './editRoute.css';
 
+import {addImage} from '../../redux/action-creators'
+
 
 class EditRoute extends Component {
   constructor(){
@@ -46,7 +48,7 @@ class EditRoute extends Component {
         gym_id: this.props.gyms.selectedGym,
         setter_id: this.props.user.id,
         set_date: new Date(),
-        removal_date: date
+        removal_date: new Date(date)
       })
     }
   }
@@ -72,9 +74,16 @@ class EditRoute extends Component {
         removal_date: date
       })
   }
+  setFormData(formData){
+    this.setState({
+      formData: formData
+    })
+  }
+ 
 
   //I wanted the freedom to know exactly what I was sending to the db so I set route in the postRoute function
   //then, if we are coming from Edit Route I add the route id... coming from Add Route will not have an ID
+  //addImage is called from redux with formData from state send from inputFile component
   // the updateRoute function is called from either the Dashboard or RouteView depending on 
   //where the component was mounted from it will call an axios.put or axios.post depending
   //then clear state so the component will be ready for the next render
@@ -94,8 +103,11 @@ class EditRoute extends Component {
     if(this.props.routeInfo){
       route.id = this.state.id
     }
-
-   this.props.updateRoute(route)
+    if(this.state.formData){
+      this.props.addImage(this.state.id, this.state.formData)
+    }
+    this.props.updateRoute(route)
+   
 
    if(!this.props.routeInfo){
       this.setState({
@@ -104,8 +116,6 @@ class EditRoute extends Component {
         color: '',
         wall: '',
         image:'',
-        set_date: '',
-        removal_date: '',
         disabled: false,
       })
    }
@@ -189,7 +199,7 @@ class EditRoute extends Component {
                           />
                         <DatePicker 
                             floatingLabelText='Removal date' 
-                            value={this.state.removal_date}
+                            value={new Date(this.state.removal_date)}
                             onChange={(nu, date)=>this.selectRemovalDate(null, date)}
                             floatingLabelStyle={{marginTop:0, paddingTop:0, top:31}}
                             inputStyle={{marginTop:14, marginLeft:3}}
@@ -198,7 +208,7 @@ class EditRoute extends Component {
                           />
                       </div>
                       <div className='secondColumn'>
-                        <FileInput route_id={this.state.id} />
+                        <FileInput route_id={this.state.id} route_image={this.state.image} setFormData={(formData)=>this.setFormData(formData)}/>
                       </div>
                   </div>
               </div>
@@ -214,4 +224,4 @@ class EditRoute extends Component {
     return { gyms, user, routeImage };
     }
   
-  export default connect(mapStateToProps )(EditRoute); 
+  export default connect(mapStateToProps, {addImage} )(EditRoute); 

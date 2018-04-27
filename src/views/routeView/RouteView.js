@@ -76,14 +76,10 @@ class RouteView extends Component {
       })
   }
   removeComment(comment_id){
-    this.setState({
-      loading:true
-    })
     axios.delete(`/api/comment/${this.props.match.params.route_id}/${comment_id}`)
       .then(comments=>{
         this.setState({
           comments:comments.data,
-          loading:false,
         })
       })
   }
