@@ -34,8 +34,10 @@ class RouteViewButtons extends Component {
     })
   }
   tickButton(){
+    this.props.removeTodo(this.props.route_id)
     this.setState({
-      ticked: true
+      ticked: true,
+      isTodo: false
     })
     this.props.AddTickVisibility('visible')
   }

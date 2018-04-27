@@ -10,12 +10,13 @@
     /* width: 20px; */
     padding: 5px;
     height: 20px;
-    font-size: .8em;
+    font-size: .95em;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-right: 0px;
     margin-bottom: 5px;
+    font-weight:bold;
 }
 .label{
     padding: 0px;
@@ -25,10 +26,23 @@
 
 .inputfile-upload{
     margin-bottom: 5px;
+    border: none;
+    border-radius:3px;
+    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    background-image: url('../../assets/upload-icon.png'), linear-gradient(0deg,#27ae60, #34d879);;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 22px;
+    width: 22px;
+    padding: 5px;
+    margin-right: 10px;
 }
 .remove-image{
     margin-bottom: 5px;
     display: none;
+    height: 22px;
+    width: 22px;
 }
 .routeImage:hover .remove-image{
     display: inline;

@@ -66,7 +66,10 @@ class Profile extends Component {
             <Header />
             <div className='profileBody'>
                 { this.props.user.temporaryRole === 'setter'?
-                    <p className='setterMessage'> Change your role<br/> to view your <br/> Climber Profile</p>
+                    <div className='arrow-div'>
+                        <p className='setterMessage'> Change your role<br/> to view your <br/> Climber Profile</p>
+                        <div className='arrow' />
+                    </div>
                 :
                 <div className='profile-content'>
 

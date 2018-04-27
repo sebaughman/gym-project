@@ -85,14 +85,17 @@ class FileInput extends Component {
     
     render() {
       return (
-            <div className='routeImage' style={{backgroundImage:`url(${this.state.image})`}}>
+            <div className='routeImage' style={this.state.image ? {backgroundImage:`url(${this.state.image})`}: {fontSize: '.8em'}}>
 
             {this.state.image ?
                 <div>
                     { this.state.uploaded ?
                         <button className='pink-button remove-image' onClick={()=>this.removeImage()}>X</button>
                         :
-                        <button className='green-button inputfile-upload' onClick={()=>this.uploadImage()}>upload pic</button>
+                        <div>
+                            <button className='inputfile-upload' onClick={()=>this.uploadImage()}></button>
+                            <button className='pink-button remove-image' onClick={()=>this.removeImage()}>X</button>
+                        </div>
                     }
                 </div>
             :

@@ -67,14 +67,10 @@ class RouteView extends Component {
     })
   }
   postComment(){
-    this.setState({
-      loading: true
-    })
     axios.post(`/api/comment`, {route_id: this.props.match.params.route_id, body: this.state.newCommentBody})
       .then(comments=>{
         this.setState({
           comments: comments.data,
-          loading: false,
           newCommentBody:''
         })
       })
@@ -93,7 +89,7 @@ class RouteView extends Component {
   }
   disableRoute(){
     let date = new Date()
-    axios.put(`/api/route`, {id:this.state.id, removal_date: date})
+    axios.put(`/api/route`, {id:this.state.id, removal_date: date, disabled: true})
       .then(route=>{
         route.data.set_date = new Date(route.data.set_date)
         route.data.removal_date = new Date(route.data.removal_date)
@@ -137,19 +133,31 @@ class RouteView extends Component {
             <Header />
             <div className='routeView-body'>
             <div className='title-container'><p className='section-title'>Route Information</p></div>
-              <div className='white-container'>
+              <div className='white-container route-info-container'>
              {this.state.loading?
-             <p>...loading</p>
+             <div className='loading-body-smaller'>
+              <div className='loading-image-smaller'></div>
+            </div>
             :
             <div>
                   <div className='title-container smaller-container'>
-                    <div className='routeView-title'>
-                      <div className='color-box' style={{backgroundColor:this.state.color}}/>
-                      <p className='section-title'>{this.state.difficulty}</p>
+                    <div>
+                        <div className='routeView-title'>
+                          <div className='color-box' style={{backgroundColor:this.state.color}}/>
+                          <p className='section-title'>{this.state.difficulty}</p>
+                        </div>
+                        <div className='avgStars-container'>
+                          {avgStars}
+                        </div>
                     </div>
-                    <div className='avgStars-container'>
-                      {avgStars}
-                    </div>
+                    {this.state.disabled ? 
+                      <div className='route-disabled-text'>
+                        This route was removed
+                      </div>
+                    :
+                      <p></p>
+                    }
+                    
                   </div>
                   <div className='routeInfo'>
                     <div className='routeData'>
@@ -159,7 +167,7 @@ class RouteView extends Component {
                     <p> <span style={{fontWeight:'bold'}}>Set Date: </span>{new Date(this.state.set_date).toDateString()}</p>
                     <p> <span style={{fontWeight:'bold'}}>Removal Date:</span> {new Date(this.state.removal_date).toDateString()}</p>
                   </div>
-                  <div className='routeImage' style={{backgroundImage:`url(${this.props.routeImage})`}}/>
+                  <div className='routeImage' style={this.props.routeImage ? {backgroundImage:`url(${this.props.routeImage})`}: {fontSize: '.8em'}}/>
                   </div>
                   <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()}/>
               </div>
@@ -179,7 +187,7 @@ class RouteView extends Component {
         
             </div>
             {this.state.loading?
-            <p>...loading</p>
+            <p></p>
             :
             <div>
             <div className='popup'>

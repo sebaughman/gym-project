@@ -487,15 +487,9 @@ app.put('/api/route-image', (req, res)=>{
                 .then(stars=>{
                     req.db.difficulty_ratings.insert({date_created: date, user_id: req.user.id, route_id: req.body.route_id, rating: req.body.rating})
                         .then(rating=>{
-                            req.db.todos.destroy({user_id: req.user.id, route_id: req.body.route_id})
-                                .then(todo=>{
-                                    req.db.GET_TICKS([req.user.id])
-                                        .then(ticks=>{
-                                            res.send(ticks)
-                                        })
-                                        .catch(err=>{
-                                            console.log(err)
-                                        })
+                              req.db.GET_TICKS([req.user.id])
+                                .then(ticks=>{
+                                    res.send(ticks)
                                 })
                                 .catch(err=>{
                                     console.log(err)

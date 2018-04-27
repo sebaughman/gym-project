@@ -38,19 +38,25 @@ constructor(){
     
 
     render() {
-        if(this.state.loading){
-              return  <p>...loading</p>
-        }
       return (
         <div>
-          <Route path='/dashboard' component={Dashboard}/> 
-          <Route path='/set-role' component={SetRole} />
-          <Route path='/route/:setter_id/:route_id' component={RouteView}/>  
-          <Route path='/profile' component={Profile} />
-       </div>
-      );
+              { this.state.loading ?
+                  <div className='loading-body'>
+                    <div className='loading-image'></div>
+                  </div>
+              :
+              <div>
+                <Route path='/dashboard' component={Dashboard}/> 
+                <Route path='/set-role' component={SetRole} />
+                <Route path='/route/:setter_id/:route_id' component={RouteView}/>  
+                <Route path='/profile' component={Profile} />
+              </div>
+              }
+        </div>
+    
+      )
     }
-  }
+}
   
   function mapStateToProps ({ user, gyms, ticks, todos }) {
     return {  user, gyms, ticks, todos };

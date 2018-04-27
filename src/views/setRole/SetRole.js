@@ -12,12 +12,13 @@ class SetRole extends Component {
     render() {
       return (
         <div className='setRole-body'>
-            <div className='setRole-button-container'>
+          <div className='role-title'>Choose your role</div>
+            <div className='white-container setRole-button-container'>
             <Link to='/dashboard'>
-              <button onClick={(role)=>this.props.setRole('climber')}> I am a Climber </button>
+              <button className='orange-button' onClick={(role)=>this.props.setRole('climber')}> I am a Climber </button>
             </Link>
             <Link to='dashboard'>
-              <button onClick={(role)=>this.props.setRole('setter')} > I am a Setter </button>
+              <button className='teal-button' onClick={(role)=>this.props.setRole('setter')} > I am a Setter </button>
             </Link>
             </div>
         </div>

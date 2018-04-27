@@ -9,7 +9,7 @@
 }
 .smaller-container{
     padding-right: 10px;
-    padding-left: 10px;
+    padding-left: 7px;
     padding-bottom: 5px;
 }
 .routeView-title{
@@ -18,18 +18,26 @@
     align-items: center;
 }
 .avgStars-container{
+    margin-top: 5px;
+    margin-left: -3px;
+    height: 12px;
     display:flex;
     flex-direction: row;
     align-items: center;
+}
+.route-info-container{
+    max-height: 240px;
 }
 .routeInfo{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: -25px;
 }
 .routeData{
     margin: 5px;
+    margin-top: 7px;
 }
 .routeData p{
     font-size: .8em;
@@ -118,4 +126,11 @@
     align-self: flex-start;
     background: none;
     border: none;
+}
+.route-disabled-text{
+    color: rgb(211, 46, 46);
+    font-style: italic;
+    font-size: 1.2em;
+    margin-right: -10px;
+    margin-top: -20px;
 }

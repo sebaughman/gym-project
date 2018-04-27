@@ -205,6 +205,7 @@ class EditRoute extends Component {
                           labelStyle={{paddingRight:5}}
                           name='difficulty'
                           maxHeight={150}
+                          transition={'none'}
                           onChange={(event, i, value, name)=>this.selectValue(event, i, value, 'difficulty')}>
                           {
                             this.state.type === 'bouldering' ?
@@ -212,6 +213,7 @@ class EditRoute extends Component {
                             :
                             sportGrades
                           }
+                        
                       </SelectField>
                   </div>
                   <div className='secondRow'>
