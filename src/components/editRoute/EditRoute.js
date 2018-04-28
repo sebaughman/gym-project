@@ -82,8 +82,10 @@ class EditRoute extends Component {
  
 
   //I wanted the freedom to know exactly what I was sending to the db so I set route in the postRoute function
-  //then, if we are coming from Edit Route I add the route id... coming from Add Route will not have an ID
-  //addImage is called from redux with formData from state send from inputFile component
+  //then, if we are coming from Edit Route I add the route id... 
+  //if there is an image added i call addImage from redux
+  // if coming from Add Route, route will not have an ID
+  //so we handle add image on dashboard after route comes back with id
   // the updateRoute function is called from either the Dashboard or RouteView depending on 
   //where the component was mounted from it will call an axios.put or axios.post depending
   //then clear state so the component will be ready for the next render
@@ -100,14 +102,24 @@ class EditRoute extends Component {
       removal_date: new Date(this.state.removal_date),
       disabled: this.state.disabled
     }
+    //coming from edit route
     if(this.props.routeInfo){
       route.id = this.state.id
+      if(this.state.formData){
+        this.props.updateRoute(route)
+        this.props.addImage(route.id, this.state.formData)
+      }
+      else{
+        this.props.updateRoute(route)
+      }
     }
+    //coming from add route
     if(this.state.formData){
-      this.props.addImage(this.state.id, this.state.formData)
+      this.props.updateRoute(route, this.state.formData)
     }
-    this.props.updateRoute(route)
-   
+    else{
+      this.props.updateRoute(route)
+    }
 
    if(!this.props.routeInfo){
       this.setState({

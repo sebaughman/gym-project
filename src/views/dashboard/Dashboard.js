@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {setUsersGyms, setUser, setTicks, setTodos, selectGym} from '../../redux/action-creators'
+import { addImage, setUsersGyms, setUser, setTicks, setTodos, selectGym} from '../../redux/action-creators'
 import Header from '../../components/header/Header';
 import Gyms from '../../components/gyms/Gyms';
 import AddGym from '../../components/addGym/AddGym';
@@ -53,17 +53,21 @@ class Dashboard extends Component {
     })
  }
 
- //this is called from the EditRoute modal to add a route 
- updateRoute(route){
+ //this is called from the EditRoute modal to ADD a route 
+ //after route comes back from db.. if there is an image then add image
+ updateRoute(route, formData){
     this.setState({
       loading: true
     })
     axios.post(`/api/route`, route)
     .then(route=>{
+      if(formData){
+        this.props.addImage(route.data.id, formData)
+      }
       this.setState({
-        type: route.data.type,
-        view: 'settersRoutes',
-        loading: false
+      type: route.data.type,
+      view: 'settersRoutes',
+      loading: false
       })
       this.addRouteVisibility('hidden')
     })
@@ -121,7 +125,7 @@ class Dashboard extends Component {
             <AddGym visibility={this.state.addGymPopup} AddGymVisibility={(value)=>this.addGymVisibility(value)}/>
           </div>
           <div className='popup'>
-            <EditRoute visibility={this.state.addRoutePopup} AddRouteVisibility={(value)=>this.addRouteVisibility(value)}  updateRoute={(route)=>this.updateRoute(route)}/>
+            <EditRoute visibility={this.state.addRoutePopup} AddRouteVisibility={(value)=>this.addRouteVisibility(value)}  updateRoute={(route, formData)=>this.updateRoute(route, formData)}/>
           </div>
           
         </div>
@@ -133,4 +137,4 @@ class Dashboard extends Component {
     return { user, gyms };
     }
   
-  export default connect(mapStateToProps , { setUsersGyms, setUser, setTicks, setTodos, selectGym })(Dashboard); 
+  export default connect(mapStateToProps , { setUsersGyms, setUser, setTicks, setTodos, selectGym, addImage })(Dashboard); 
