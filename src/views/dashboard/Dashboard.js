@@ -32,20 +32,6 @@ class Dashboard extends Component {
   }
  }
 
- //I am not sure if this is used anywhere......
-//  checkUsersGyms(){
-//     if(this.props.gyms.usersGyms.length === 0){
-//       this.setState({
-//         addGymPopup: 'visible'
-//       })
-//     }
-//     else{
-//       this.setState({
-//         loading: false
-//       })
-//     }
-//  }
-
  //this is passed to child components that need control over closing or opening the modal
  addGymVisibility(value){
     this.setState({

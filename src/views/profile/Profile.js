@@ -9,10 +9,21 @@ import './profile.css'
 
 
 class Profile extends Component {
+    constructor(){
+        super()
+        this.state={
+            type: 'sport'
+        }
+    }
+    changeRoutes(event){
+        this.setState({
+          [event.target.name]: event.target.value
+        })
+     }
 
     render() {
-      let ticks = this.props.ticks.filter(tick=>tick.gym_id === this.props.gyms.selectedGym)
-      let todos = this.props.todos.filter(todo=>todo.gym_id === this.props.gyms.selectedGym)
+      let ticks = this.props.ticks.filter(tick=>tick.gym_id === this.props.gyms.selectedGym).filter(tick=>tick.type === this.state.type)
+      let todos = this.props.todos.filter(todo=>todo.gym_id === this.props.gyms.selectedGym).filter(todo=>todo.type === this.state.type)
       return (
         <div>
             <Header />
@@ -35,6 +46,10 @@ class Profile extends Component {
 
                   <div className='title-container'>
                     <p className='section-title'>My Todos</p>
+                    <select value={this.state.type} name='type' onChange={(event)=>this.changeRoutes(event)}>
+                        <option value='bouldering'>Bouldering</option>
+                        <option value='sport'>Sport</option>
+                    </select>
                   </div>
 
                   <div className='white-container'>

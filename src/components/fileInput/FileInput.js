@@ -53,6 +53,7 @@ class FileInput extends Component {
             })
             let formData = new FormData();
             formData.set('abc', file)
+            console.log(file)
             this.props.setFormData(formData)
        }
     // binds this.state and this.props into setImage.

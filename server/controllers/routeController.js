@@ -38,7 +38,9 @@ module.exports = {
                             values.push(Number(rating.slice(1).join('')))
                         }
                         if(route[0].type === 'sport'){
-                            letters.push(rating.pop())
+                            if(isNaN(rating[rating.length-1])){ 
+                                letters.push(rating.pop())
+                            }
                             values.push(Number(rating.slice(2).join('')))
                         }
                     })
@@ -53,47 +55,18 @@ module.exports = {
                         }
                         if(route[0].type === 'sport'){
                             let numbers = []
+                            let letterToNum = {'a': 1, 'b':2, 'c':3, 'd':4}
+                            let numToLetter = {1:'a', 2:'b', 3:'c', 4:'d'}
 
-                            // foo = {'a': 1, 'b':2}
-                            // numbers.push foo[letter]
                             letters.map(letter=>{
-                                switch (letter){
-                                    case 'a':
-                                    numbers.push(1)
-                                    break;
-                                    case 'b':
-                                    numbers.push(2)
-                                    break;
-                                    case 'c':
-                                    numbers.push(3)
-                                    break;
-                                    case 'd':
-                                    numbers.push(4)
-                                    break;
-                                    default:
-                                    console.log(letter)
-                                }
-                            })
-                        let number = Math.round((numbers.reduce((a, b)=> a += b)) / numbers.length)
-                        let letter;
-                        switch (number){
-                            case 1:
-                                letter ='a'
-                                break;
-                            case 2:
-                                letter ='b'
-                                break;
-                            case 3:
-                                letter ='c'
-                                break;
-                            case 4:
-                            letter ='d'
-                            break;
-                            default: 
-                            console.log(number)
-                            }
-
-                        avgRating = ('5.' + avgRating.toString() + letter)
+                                numbers.push(letterToNum[letter])
+                              })
+                            
+                            let number = Math.round((numbers.reduce((a, b)=> a += b)) / numbers.length)
+                            
+                            let letter = numToLetter[number];
+                     
+                            avgRating = ('5.' + avgRating.toString() + letter)
                         }
                     }
                     res.send({...route[0], avgRating})

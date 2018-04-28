@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {removeTick, addTodo, removeTodo, addTick} from '../../redux/action-creators'
 import './routeViewButtons.css'
+import { DatePicker, Dialog } from 'material-ui';
+import MuiThemeProvider   from 'material-ui/styles/MuiThemeProvider';
 
 
 class RouteViewButtons extends Component {
@@ -62,6 +64,9 @@ class RouteViewButtons extends Component {
       isTodo: false,
     })
   }
+  openDatePicker(){
+    this.refs.dp.openDialog()
+  }
 
     render() {
       return (
@@ -69,7 +74,23 @@ class RouteViewButtons extends Component {
             { this.props.user.temporaryRole === 'setter' & this.props.user.id == this.props.setter_id ?
             <div className='routeView-button-container'>
               <button className='green-button' onClick={()=>this.props.EditRouteVisibility('visible')}>Edit</button>
-              <button className='teal-button' onClick={()=>this.props.disableRoute()}>Disable</button>
+              { this.props.disabled ?
+                <div className='reEnable-button-container'>
+                  <button className='teal-button ' onClick={()=>this.openDatePicker()}>Re-Enable</button>
+                  <MuiThemeProvider>
+                  <DatePicker 
+                    name = 're-enable'
+                    ref = 'dp'
+                    onChange={(nu, date)=>this.props.enableRoute(null, date)}
+                    container={Dialog}
+                    dialogContainerStyle = {{marginLeft:'-120px', paddingLeft: '120px', marginTop:'-60px'}}
+                  />
+                  </MuiThemeProvider>
+                </div>
+                :
+                <button className='teal-button' onClick={()=>this.props.disableRoute()}>Disable</button>
+              }
+              
             </div>
             :
             <div className='routeView-button-container'>
@@ -79,7 +100,14 @@ class RouteViewButtons extends Component {
               <button className='green-button' onClick={()=>this.removeTick()}>Ticked!</button>
             }
             {!this.state.isTodo ?
-              <button className='teal-button' onClick={()=>this.addTodo()}>Todo</button>
+              <div>
+              { this.state.ticked ?
+                <button className='teal-button' disabled onClick={()=>this.addTodo()}>Todo</button>
+                :
+                <button className='teal-button' onClick={()=>this.addTodo()}>Todo</button>
+              }
+              </div>
+              
               :
               <button className='teal-button' onClick={()=>this.removeTodo()} >On Your List!</button>
             }

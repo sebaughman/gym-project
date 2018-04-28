@@ -35,7 +35,8 @@ let columns = [
                             return <div className='stars-container'> {stars.map((star,i)=><div key={i} className='star-icon'/>)}</div>
                          },
          minWidth: 50,
-         maxWidth: 60
+         maxWidth: 60,
+        //  sortMethod: ()
      }
 ]
 export default columns

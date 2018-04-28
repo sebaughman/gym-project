@@ -74,6 +74,16 @@ class RouteView extends Component {
         )
       })
   }
+  enableRoute(nu, date){
+    axios.put(`/api/route`, {id:this.state.id, removal_date: date, disabled: false})
+      .then(route=>{
+        route.data.set_date = new Date(route.data.set_date)
+        route.data.removal_date = new Date(route.data.removal_date)
+        this.setState(
+          route.data
+        )
+      })
+  }
 
     render() {
       let stars = [];
@@ -125,7 +135,7 @@ class RouteView extends Component {
                   </div>
                   <div className='routeImage' style={this.props.routeImage ? {backgroundImage:`url(${this.props.routeImage})`}: {fontSize: '.8em'}}/>
                   </div>
-                  <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()}/>
+                  <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} disabled={this.state.disabled} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()} enableRoute={(nu, date)=>this.enableRoute(nu, date)}/>
               </div>
              }
               </div>
