@@ -11,7 +11,7 @@ body{
 }
 a{
     text-decoration: none;
-    color: #d9d9d7
+    color: inherit;
 }
 .loading-body{
  height: 100vh;
