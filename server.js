@@ -13,6 +13,7 @@ const routeController = require('./server/controllers/routeController');
 const multer = require('multer');
 const aws = require('aws-sdk');
 const multerS3 = require('multer-s3');
+const path = require('path');
 
 const tickController = require('./server/controllers/tickController');
 
@@ -178,9 +179,11 @@ app.get('/auth/google', passport.authenticate('google', {scope: ['profile']}));
 app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
     if(req.user.role){
         res.redirect(`//${process.env.HOST}:${process.env.FRONTEND_PORT}/dashboard`);
+        // res.redirect('/dashboard')
      } 
      else{
         res.redirect(`//${process.env.HOST}:${process.env.FRONTEND_PORT}/set-role`);
+        // res.redirect('/set-role')
      }
     
 });
@@ -274,6 +277,8 @@ app.delete(`/api/comment/:route_id/:comment_id`, commentController.deleteComment
 
  app.delete(`/api/todo/:route_id`, todoController.deleteTodo)
 
+
+//  app.use(express.static(path.join(__dirname, './build')))
 
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>{

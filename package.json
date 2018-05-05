@@ -2,7 +2,7 @@
   "name": "gym-project",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "aws-sdk": "^2.228.1",
     "body-parser": "^1.18.2",
