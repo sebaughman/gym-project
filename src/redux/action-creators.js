@@ -60,7 +60,6 @@ export function removeTick(route_id){
     }
 }
 export function addTodo(route_id, gym_id){
-    console.log(gym_id)
     return{
         type: ADD_TODO,
         payload: services.addTodo(route_id, gym_id)

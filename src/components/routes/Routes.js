@@ -19,7 +19,9 @@ class Routes extends Component {
 //pretty much it gets all the route from the selected gym and sets them to state as All, setter's, and disabled
 // disabled show up in setter's and disabled but not myRoutes the separation happens on the db
 componentWillMount(){
-    this.populateRoutes(this.props.gyms.selectedGym)
+    if(this.props.gyms.selectedGym){
+        this.populateRoutes(this.props.gyms.selectedGym)
+    }
 }
 componentWillReceiveProps(props){
     this.populateRoutes(props.gyms.selectedGym)
