@@ -54,7 +54,6 @@ const services = {
     },
 
     addTodo:(route_id, gym_id)=>{
-        console.log(gym_id)
         return axios.post(`/api/todo`, {route_id: route_id, gym_id: gym_id})
             .then(todos=>todos.data)
     },
@@ -66,11 +65,21 @@ const services = {
 
     addUsersGym: (gym_id)=>{
         return axios.post(`/api/users-gym`, {gym_id: gym_id})
-            .then(gyms=>{
-                let usersGyms = {usersGyms: gyms.data}
-                console.log(usersGyms)
-                return usersGyms
-            })
+                .then(gyms=>{
+                    let usersGyms = {usersGyms: gyms.data}
+                    return usersGyms
+                })
+    },
+    addImage: (route_id, formData)=>{
+        return axios.post(`/api/route-image/${route_id}`, formData,  {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }})
+                .then(response=>response.data.route.image)
+    },
+    removeImage: (route_id, fileName)=>{
+        return axios.put(`/api/route-image`, {route_id: route_id, fileName: fileName})
+                .then(response=>response)
     }
     
 }

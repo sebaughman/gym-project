@@ -23,6 +23,9 @@ class AddGym extends Component {
      }
    }
 
+//goes to the db and gets all of the gyms available, 
+//it then puts all of the names in an array
+//to be used by the material ui type ahead
 componentWillMount(){
      axios.get(`/api/gyms`)
         .then(gyms=>{
@@ -35,6 +38,7 @@ componentWillMount(){
         })
 }
 
+//if the selected gym name = a gym already in our list of all gyms then we populate the city and state
 selectGym(event){
       if(this.state.allGyms.find(gym=>gym.name === event)){
         this.state.allGyms.map(gym=>{
@@ -61,6 +65,11 @@ changeValue(event){
   })
 }
 
+//if the selected gym is already in our db we "link" that gym to our user
+//and set that gym as our selected gym
+//then clear state so the next time the modal is opened it does not contain the previous info
+//else the gym is no tin our db so add it, link it to our user, set it as our selected gym, and clear state
+//then close modal
 addGym(){
   if(this.state.allGyms.find(gym=>gym.name === this.state.name)){
         this.props.addUsersGym(this.state.selectedGym)
@@ -97,7 +106,7 @@ render() {
       return (
         <div className='popup-background' style={{visibility: this.props.visibility}}>
           <div className='popup-content'>
-          <span className='title-container'>  <h3> Add Gym </h3> <button className='exit-popup-button' onClick={()=>this.props.AddGymVisibility('hidden')}> X</button></span>
+          <span className='title-container'>  <h3 > Add Gym </h3> <button className='exit-popup-button' onClick={()=>this.props.AddGymVisibility('hidden')}> X</button></span>
               <MuiThemeProvider muiTheme={getMuiTheme()}>
                 <div>
                   <Autocomplete name='autoCompleteSelector' className='gymSelector' 

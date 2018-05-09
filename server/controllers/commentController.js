@@ -11,35 +11,27 @@ module.exports = {
            })
     },
 
-    postComment: (req,res)=>{
-        req.db.comments.insert({...req.body, created_at: new Date()})
-           .then(result=>{
-               console.log(new Date(result.created_at))
-               res.send(result)
-           })
-           .catch(err=>{
-               console.log(err)
-           })
+    postComment: async (req,res)=>{
+        try {
+            await req.db.comments.insert({user_id: req.user.id, ...req.body, created_at: new Date()})
+            const comments = await req.db.GET_COMMENTS([req.body.route_id])
+            res.send(comments)
+        } catch(err){
+            console.log(err)
+            res.status(500).send(err)
+        }
     },
+       
 
-    updateComment: (req, res)=>{
-        req.db.comments.update({...req.body, updated_at: new Date() })
-           .then(comment=>{
-               res.send(comment)
-           })
-           .catch(err=>{
-               console.log(err)
-           })
-    }, 
-
-    deleteComment: (req, res)=>{
-        req.db.comments.destroy({id: req.params.comment_id})
-           .then(comment=>{
-               res.send(comment)
-           })
-           .catch(err=>{
-               console.log(err)
-           })
+    deleteComment: async (req, res)=>{
+        try {
+            await  req.db.comments.destroy({id: req.params.comment_id})
+            const comments = await req.db.GET_COMMENTS([req.params.route_id])
+            res.send(comments)
+        } catch(err){
+            console.log(err)
+            res.status(500).send(err)
+        }
     },
 
     

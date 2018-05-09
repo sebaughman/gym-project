@@ -3,27 +3,16 @@
     display:flex;
     flex-direction: row;
     justify-content: space-around;
-    margin: 13px;
+    width: 100%;
+    margin: 10px;
+    max-height: 30px;
 }
 .routeView-button-container button{
     width: 90px;
     padding: 4px;
+    height: 25px;
 }
-.pink-button{
-    background-image: linear-gradient(0deg,#FF595E, rgb(240, 135, 139));
-    border: none;
-    border-radius:3px;
-    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+.reEnable-button-container{
+    width: 90px;
 }
-.teal-button{
-    background-image: linear-gradient(0deg,rgb(14, 142, 151), rgb(90, 196, 204));
-    border: none;
-    border-radius:3px;
-    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-}
-.orange-button{
-    background-image: linear-gradient(0deg,#F26430, rgb(241, 134, 95));
-    border: none;
-    border-radius:3px;
-    box-shadow: 2px 5px 5px 0px rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-}
+

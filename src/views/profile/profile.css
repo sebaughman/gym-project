@@ -13,10 +13,24 @@
     justify-content: center;
 }
 .setterMessage{
-    margin-top: 200px;
+    margin-top: 140px;
     text-align: center;
     font-size: 1.3em;
     color: #3c3e47;
     letter-spacing: .03em
-    
+}
+.arrow-div{
+    display: flex;
+    flex-direction: row;
+}
+.arrow{
+    height: 190px;
+    width: 90px;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: -70px;
+    background-image: url('../../assets/arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }

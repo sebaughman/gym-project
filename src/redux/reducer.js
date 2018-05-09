@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {ADD_USERS_GYM, SET_USERS_GYMS, SET_ROLE, SET_USER, SET_TICKS, SELECT_GYM, SET_TODOS, CHANGE_ROLE, ADD_TICK, ADD_TODO, REMOVE_TICK, REMOVE_TODO} from './constraints'
+import {SET_IMAGE, ADD_IMAGE, REMOVE_IMAGE, ADD_USERS_GYM, SET_USERS_GYMS, SET_ROLE, SET_USER, SET_TICKS, SELECT_GYM, SET_TODOS, CHANGE_ROLE, ADD_TICK, ADD_TODO, REMOVE_TICK, REMOVE_TODO} from './constraints'
 
 const userState = {
     id: '',
@@ -102,7 +102,27 @@ function gyms(state = gymsState, action ){
             return state;
     }
 }
+function routeImage(state=null, action){
+    switch(action.type){
+        case `${SET_IMAGE}`:
+            return action.payload
+        case `${ADD_IMAGE}_PENDING`:
+            return state;
+        case `${ADD_IMAGE}_FULFILLED`:
+            return action.payload;
+        case `${ADD_IMAGE}_REJECTED`:
+             return state;
+        case `${REMOVE_IMAGE}_PENDING`:
+             return state;
+        case `${REMOVE_IMAGE}_FULFILLED`:
+             return null;
+        case `${REMOVE_IMAGE}_REJECTED`:
+              return state;
+        default:
+            return state;
+    }
+}
 
-const reducer = combineReducers({user, ticks, todos, gyms});
+const reducer = combineReducers({user, ticks, todos, gyms, routeImage});
 
 export default reducer;

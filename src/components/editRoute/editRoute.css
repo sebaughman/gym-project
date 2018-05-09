@@ -5,3 +5,13 @@
     padding: 3px;
     width: 50px;
 }
+.secondRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.secondColumn{
+    margin-right: 10px; 
+}

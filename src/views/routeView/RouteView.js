@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {setImage} from '../../redux/action-creators';
 import Header from '../../components/header/Header';
 import axios from 'axios';
 import RouteViewButtons from '../../components/routeViewButtons/RouteViewButtons'
 import AddTick from '../../components/addTick/AddTick'
 import EditRoute from '../../components/editRoute/EditRoute'
+import Comments from '../../components/comments/Comments'
 import './routeView.css';
 
 class RouteView extends Component {
@@ -17,27 +19,25 @@ class RouteView extends Component {
       newCommentBody:'',
     }
   }
+
+  //get all route info from db for this route
+  //change date strings from db to date objects and set all of route info to state
   componentDidMount(){
     axios.get(`/api/route/${this.props.match.params.route_id}`)
       .then(route=>{
+        this.props.setImage(route.data.image)
         route.data.set_date = new Date(route.data.set_date)
         route.data.removal_date = new Date(route.data.removal_date)
-        axios.get(`/api/comments/${this.props.match.params.route_id}`)
-          .then(comments=>{
-            this.setState({
-              ...route.data,
-              loading: false,
-              comments: comments.data
-            })
-          })
-          .catch(err=>{
-            console.log(err)
-          })
+        this.setState({
+          ...route.data, 
+          loading: false
+        })
       })
       .catch(err=>{
         console.log(err)
       })
   }
+  //is called from popups that need to change the visibility of the popups
   AddTickVisibility(value){
     this.setState({
       addTickPopup: value
@@ -48,6 +48,8 @@ class RouteView extends Component {
       editRoutePopup: value
     })
   }
+
+  //called from Edit Route popup to update route info
   updateRoute(route){
     axios.put(`/api/route`, route)
     .then(route=>{
@@ -59,39 +61,21 @@ class RouteView extends Component {
         this.editRouteVisibility('hidden')
     })
   }
-  enterComment(event){
-    this.setState({
-      newCommentBody: event.target.value
-    })
-  }
-  postComment(){
-    this.setState({
-      loading: true
-    })
-    axios.post(`/api/comment`, {route_id: this.props.match.params.route_id, body: this.state.newCommentBody})
-      .then(comments=>{
-        this.setState({
-          comments: comments.data,
-          loading: false,
-          newCommentBody:''
-        })
-      })
-  }
-  removeComment(comment_id){
-    this.setState({
-      loading:true
-    })
-    axios.delete(`/api/comment/${this.props.match.params.route_id}/${comment_id}`)
-      .then(comments=>{
-        this.setState({
-          comments:comments.data,
-          loading:false,
-        })
-      })
-  }
+
+  //changes the removal date of the route to today and updates the the route in the db
   disableRoute(){
     let date = new Date()
-    axios.put(`/api/route`, {id:this.state.id, removal_date: date})
+    axios.put(`/api/route`, {id:this.state.id, removal_date: date, disabled: true})
+      .then(route=>{
+        route.data.set_date = new Date(route.data.set_date)
+        route.data.removal_date = new Date(route.data.removal_date)
+        this.setState(
+          route.data
+        )
+      })
+  }
+  enableRoute(nu, date){
+    axios.put(`/api/route`, {id:this.state.id, removal_date: date, disabled: false})
       .then(route=>{
         route.data.set_date = new Date(route.data.set_date)
         route.data.removal_date = new Date(route.data.removal_date)
@@ -102,30 +86,11 @@ class RouteView extends Component {
   }
 
     render() {
-      let comments;
       let stars = [];
       let avgStars;
 
-      //build comment boxes and star div
+      //build star div
       if(!this.state.loading){
-         comments = this.state.comments.map((comment, i)=>{
-           comment.created_at = new Date(comment.created_at).toDateString()
-          return <div className='comment-box' key={i}>
-                    <div className='comment-image-body'>
-                        <div className='comment-user-image' style={{backgroundImage:`url(${comment.image})`}}/>
-                        <div className='comment-content'>
-                          <p className='comment-owner-name'>{comment.first_name}</p>
-                          <p className='comment-created-at'>{comment.created_at}</p>
-                          <p className='comment-body'> {comment.body}</p>
-                        </div>
-                    </div>
-                    {comment.user_id === this.props.user.id ?
-                    <button className='remove-comment-button' onClick={(comment_id)=>this.removeComment(comment.id)}>X</button>
-                    :
-                    <p></p>
-                    }
-                </div>
-        })
         for(let i=0;i<this.state.avg_stars;i++){stars.push(i)}
           avgStars = stars.map((star,i)=><div key={i} className='star-icon'/>)
       }
@@ -135,19 +100,30 @@ class RouteView extends Component {
             <Header />
             <div className='routeView-body'>
             <div className='title-container'><p className='section-title'>Route Information</p></div>
-              <div className='white-container'>
+              <div className='white-container route-info-container'>
              {this.state.loading?
-             <p>...loading</p>
+             <div className='loading-body-smaller'>
+              <div className='loading-image-smaller'></div>
+            </div>
             :
             <div>
                   <div className='title-container smaller-container'>
-                    <div className='routeView-title'>
-                      <div className='color-box' style={{backgroundColor:this.state.color}}/>
-                      <p className='section-title'>{this.state.difficulty}</p>
+                    <div>
+                        <div className='routeView-title'>
+                          <div className='color-box' style={{backgroundColor:this.state.color}}/>
+                          <p className='section-title'>{this.state.difficulty}</p>
+                        </div>
+                        <div className='avgStars-container'>
+                          {avgStars}
+                        </div>
                     </div>
-                    <div className='avgStars-container'>
-                      {avgStars}
-                    </div>
+                    {this.state.disabled ? 
+                      <div className='route-disabled-text'>
+                        This route was removed
+                      </div>
+                    :
+                      <p></p>
+                    } 
                   </div>
                   <div className='routeInfo'>
                     <div className='routeData'>
@@ -157,27 +133,19 @@ class RouteView extends Component {
                     <p> <span style={{fontWeight:'bold'}}>Set Date: </span>{new Date(this.state.set_date).toDateString()}</p>
                     <p> <span style={{fontWeight:'bold'}}>Removal Date:</span> {new Date(this.state.removal_date).toDateString()}</p>
                   </div>
-                  <div className='routeImage' style={{backgroundImage:this.state.image}}/>
+                  <div className='routeImage' style={this.props.routeImage ? {backgroundImage:`url(${this.props.routeImage})`}: {fontSize: '.8em'}}/>
                   </div>
-                  <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()}/>
+                  <RouteViewButtons AddTickVisibility={(value)=>this.AddTickVisibility(value)} EditRouteVisibility={(value)=>this.editRouteVisibility(value)} disabled={this.state.disabled} route_id={this.state.id}  setter_id={this.props.match.params.setter_id} disableRoute={()=>this.disableRoute()} enableRoute={(nu, date)=>this.enableRoute(nu, date)}/>
               </div>
-             
              }
               </div>
               <div className='title-container'><p className='section-title'>Comments</p></div>
               <div className='white-container'>
-                  <div className='comment-container'>
-                    {comments}
-                  </div>
-                  <div className='new-comment-body'>
-                    <input  type='text' placeholder="Leave a comment!" value={this.state.newCommentBody} onChange={(event)=>this.enterComment(event)}/>
-                    <button className='post-comment-button' onClick={()=>this.postComment()}>Post</button>
-                  </div>
+                 <Comments route_id={this.props.match.params.route_id}/>
               </div>
-        
             </div>
             {this.state.loading?
-            <p>...loading</p>
+            <p></p>
             :
             <div>
             <div className='popup'>
@@ -193,8 +161,8 @@ class RouteView extends Component {
     }
   }
   
-  function mapStateToProps ({ user}) {
-    return { user};
+  function mapStateToProps ({ user, routeImage}) {
+    return { user, routeImage};
     }
   
-  export default connect(mapStateToProps , )(RouteView); 
+  export default connect(mapStateToProps ,{setImage} )(RouteView); 

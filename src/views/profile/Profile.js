@@ -2,77 +2,42 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/header/Header';
 import Gyms from '../../components/gyms/Gyms';
+import columns from '../../helperFiles/tableColumns';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import './profile.css'
 
 
 class Profile extends Component {
-    // constructor(){
-    //     super()
-    //     this.state = {
-    //         addGymPopup: 'hidden'
-    //     }
-    // }
-    // AddGymVisibility(value){
-    //     this.setState({
-    //       addGymPopup: value
-    //     })
-    //   }
+    constructor(){
+        super()
+        this.state={
+            type: 'sport'
+        }
+    }
+    changeRoutes(event){
+        this.setState({
+          [event.target.name]: event.target.value
+        })
+     }
 
     render() {
-      let ticks = this.props.ticks.filter(tick=>tick.gym_id === this.props.gyms.selectedGym)
-      let todos = this.props.todos.filter(todo=>todo.gym_id === this.props.gyms.selectedGym)
-      let columns = [
-        {
-            Header:'',
-            id: 'color',
-            accessor: row => <div className='color-box' style={{backgroundColor: row.color}} />,
-            minWidth: 29,
-            maxWidth: 29
-        },
-        {
-            Header: 'Grade',
-            accessor: `difficulty`,
-            minWidth: 53,
-            maxWidth: 53
-         },
-         {
-             Header: 'Wall',
-             accessor: 'wall',
-             minWidth: 63,
-             maxWidth: 80
-         },
-         {
-             Header: 'Setter',
-             accessor: 'setters_name',
-             minWidth: 70,
-             maxWidth: 95
-         },
-         {
-             Header: 'Stars',
-             id:'avg_stars',
-             accessor: row => { let stars =[]
-                                 for(let i=0;i<row.avg_stars;i++){stars.push(i)}
-                                return <div className='stars-container'> {stars.map((star,i)=><div key={i} className='star-icon'/>)}</div>
-                             },
-             minWidth: 50,
-             maxWidth: 60
-         }
-    ]
-
+      let ticks = this.props.ticks.filter(tick=>tick.gym_id === this.props.gyms.selectedGym).filter(tick=>tick.type === this.state.type)
+      let todos = this.props.todos.filter(todo=>todo.gym_id === this.props.gyms.selectedGym).filter(todo=>todo.type === this.state.type)
       return (
         <div>
             <Header />
             <div className='profileBody'>
                 { this.props.user.temporaryRole === 'setter'?
-                    <p className='setterMessage'> Change your role<br/> to view your <br/> Climber Profile</p>
+                    <div className='arrow-div'>
+                        <p className='setterMessage'> Change your role<br/> to view your <br/> Climber Profile</p>
+                        <div className='arrow' />
+                    </div>
                 :
                 <div className='profile-content'>
 
                   <div className='title-container'>
                         <p className='section-title'>Gyms</p>
-                        <button className='addGym-Button green-button' onClick={()=>this.AddGymVisibility('visible')}> + </button>
                   </div>
                 
                   <div className=' white-container'>
@@ -81,6 +46,10 @@ class Profile extends Component {
 
                   <div className='title-container'>
                     <p className='section-title'>My Todos</p>
+                    <select value={this.state.type} name='type' onChange={(event)=>this.changeRoutes(event)}>
+                        <option value='bouldering'>Bouldering</option>
+                        <option value='sport'>Sport</option>
+                    </select>
                   </div>
 
                   <div className='white-container'>
@@ -125,9 +94,6 @@ class Profile extends Component {
 
                 </div>
                 }
-                {/* <div className='popup'>
-                    <AddGym visibility={this.state.addGymPopup} AddGymVisibility={(value)=>this.AddGymVisibility(value)}/>
-                </div> */}
             </div>
         </div>
       );

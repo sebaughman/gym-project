@@ -1,5 +1,5 @@
 import services from './services'
-import {ADD_USERS_GYM, SET_USERS_GYMS, SET_ROLE, SET_USER, SET_TICKS, SELECT_GYM, SET_TODOS, CHANGE_ROLE, ADD_TICK, ADD_TODO, REMOVE_TICK, REMOVE_TODO} from './constraints'
+import {SET_IMAGE, ADD_IMAGE, REMOVE_IMAGE, ADD_USERS_GYM, SET_USERS_GYMS, SET_ROLE, SET_USER, SET_TICKS, SELECT_GYM, SET_TODOS, CHANGE_ROLE, ADD_TICK, ADD_TODO, REMOVE_TICK, REMOVE_TODO} from './constraints'
 
 
 
@@ -60,7 +60,6 @@ export function removeTick(route_id){
     }
 }
 export function addTodo(route_id, gym_id){
-    console.log(gym_id)
     return{
         type: ADD_TODO,
         payload: services.addTodo(route_id, gym_id)
@@ -76,5 +75,23 @@ export function addUsersGym(gym_id){
     return{
         type: ADD_USERS_GYM,
         payload: services.addUsersGym(gym_id)
+    }
+}
+export function setImage(image){
+    return {
+        type: SET_IMAGE,
+        payload: image
+    }
+}
+export function addImage(route_id, formData){
+    return{
+        type: ADD_IMAGE,
+        payload: services.addImage(route_id, formData)
+    }
+}
+export function removeImage(route_id, fileName){
+    return{
+        type: REMOVE_IMAGE,
+        payload: services.removeImage(route_id, fileName)
     }
 }

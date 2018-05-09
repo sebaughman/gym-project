@@ -24,6 +24,14 @@
     width: 50px;
     margin-left: 10px;
 }
+.header-logo:hover{
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
 .userImage-select-div{
     display: flex;
     flex-direction: column;
@@ -53,7 +61,6 @@
     height: 60px;
     margin-top:10px;
 }
-
 .appTitle-select{
     margin-top: 0px;
     font-size: 1.2em;

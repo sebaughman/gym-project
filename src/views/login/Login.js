@@ -8,7 +8,7 @@ class Login extends Component {
         <div className='login-body'>
             <div className='login-logo' /> 
             <div className='login-title'> Gym Project </div>
-          <a href='http://localhost:8080/auth/google'>
+          <a href='http://localhost:8000/auth/google'>
           <div className='google-login-button'/>
           </a>
         </div>
