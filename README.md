@@ -8,9 +8,11 @@ The app was built as a web app with mobile first in mind. I am currently working
 ## Walk Through
 
 Create an account (Google oAuth) and choose whether you are a climber or a setter (they have different permissions)
+
 ---- login screen----
 
 Once successfully authenticated, choose the gym you climb (or set) at. Material UI was used to autofill known gyms. Once a gym is added and selected, routes at that gym are displayed using React Table. Columns can be selected to sort based on their contents. If you have the role of setter, you can add a route. If you are a climber, there is no add Route button. 
+
 -----dashbaord setter---- --- dashboard climber----
 
 
